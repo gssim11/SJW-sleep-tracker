@@ -147,7 +147,23 @@
             font-size: 0.85rem;
         }
 
-        /* 모바일 최적화: 시간 입력란 비율 조정 */
+        /* 모바일 최적화: 날짜 및 시간 입력란 비율 조정 */
+        .date-input {
+            padding: 12px 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            outline: none;
+            color: var(--text-main);
+            background: white;
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
         .time-range {
             display: flex;
             align-items: center;
@@ -157,7 +173,7 @@
 
         .time-range input[type="time"] {
             flex: 1;
-            max-width: 140px; /* S26 울트라 등 모바일에서 끝없이 늘어나는 것 방지 */
+            max-width: 140px; 
             padding: 10px;
             font-size: 1.1rem;
             font-weight: bold;
@@ -281,6 +297,7 @@
             .status-grid { grid-template-columns: 1fr; gap: 12px; }
             .card { padding: 15px; }
             .time-range input[type="time"] { padding: 8px; font-size: 1rem; }
+            .date-input { padding: 10px; font-size: 1.05rem; }
             .input-group { padding: 12px; }
         }
     </style>
@@ -300,6 +317,12 @@
     <div class="input-panel">
         <h3>📝 현재 수면 및 활동 패턴 입력</h3>
         <div class="input-grid">
+            <!-- 날짜 입력 폼 추가 -->
+            <div class="input-group full-width" style="background-color: #ebf4ff; border-color: #bee3f8;">
+                <label style="color: #2b6cb0;">기록 날짜 선택 <span style="font-size: 0.8rem; font-weight: normal;">과거 데이터 입력 가능</span></label>
+                <input type="date" id="recordDate" class="date-input">
+            </div>
+
             <div class="input-group">
                 <label>낮잠 시간 <span id="calcNapText" class="calc-text">0시간 0분</span></label>
                 <div class="time-range">
@@ -324,12 +347,12 @@
                 </select>
             </div>
         </div>
-        <button id="saveBtn" class="save-btn">💾 오늘 수면 기록 저장하기</button>
+        <button id="saveBtn" class="save-btn">💾 수면 기록 저장하기</button>
     </div>
 
     <!-- 2. 수면 트래킹 차트 -->
     <section>
-        <div class="section-title">📈 1주일 수면 트래킹 일지</div>
+        <div class="section-title">📈 2주(14일) 수면 트래킹 일지</div>
         <div class="card">
             <div class="chart-header">
                 <p style="margin:0; font-size:0.85rem; color:var(--text-sub); word-break:keep-all;">
@@ -444,6 +467,7 @@
         const dynamicWakeWindow = document.getElementById('dynamicWakeWindow');
         const recNap = document.getElementById('recNap');
         
+        const recordDate = document.getElementById('recordDate'); // 신규: 날짜 선택 요소
         const napStart = document.getElementById('napStart');
         const napEnd = document.getElementById('napEnd');
         const nightStart = document.getElementById('nightStart');
@@ -480,6 +504,13 @@
         const STORAGE_KEY = 'jaewon_sleep_diary';
 
         // --- 3. 기본 설정 함수 ---
+        // 오늘 날짜를 YYYY-MM-DD 형식으로 설정
+        const todayObj = new Date();
+        const yyyy = todayObj.getFullYear();
+        const mm = String(todayObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(todayObj.getDate()).padStart(2, '0');
+        recordDate.value = `${yyyy}-${mm}-${dd}`;
+
         for (let i = 12; i <= 36; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -604,23 +635,47 @@
 
         function saveRecord() {
             const data = loadSleepData();
-            const today = new Date();
-            const dateStr = `${today.getMonth() + 1}/${today.getDate()}`;
+            
+            // 사용자가 선택한 날짜 가져오기
+            const selectedDateStr = recordDate.value;
+            if(!selectedDateStr) {
+                showToast("⚠️ 기록할 날짜를 먼저 선택해주세요.");
+                return;
+            }
+
+            // 차트 표시용 날짜 포맷팅 (MM/DD)
+            const selDateObj = new Date(selectedDateStr);
+            const displayDateStr = `${selDateObj.getMonth() + 1}/${selDateObj.getDate()}`;
             
             const newRecord = {
-                date: dateStr,
+                date: displayDateStr, // X축 라벨용
+                sortDate: selectedDateStr, // 정렬 기준용 (YYYY-MM-DD)
                 total: parseFloat(currentTotalHours.toFixed(1)),
                 wake: parseFloat(currentWakeHours.toFixed(1))
             };
 
-            const existingIdx = data.findIndex(d => d.date === dateStr);
+            // 중복 날짜 확인 (기존 호환성을 위해 date 또는 sortDate 확인)
+            const existingIdx = data.findIndex(d => d.sortDate === selectedDateStr || d.date === displayDateStr);
+            
             if (existingIdx >= 0) {
-                data[existingIdx] = newRecord;
-                showToast("✅ 오늘 기록이 업데이트 되었습니다.");
+                data[existingIdx] = newRecord; // 덮어쓰기
+                showToast(`✅ ${displayDateStr} 기록이 업데이트 되었습니다.`);
             } else {
-                if (data.length >= 7) data.shift();
                 data.push(newRecord);
-                showToast("💾 오늘 수면 기록이 저장되었습니다.");
+                showToast(`💾 ${displayDateStr} 기록이 새로 저장되었습니다.`);
+            }
+
+            // 날짜순(과거->최신)으로 배열 재정렬
+            data.sort((a, b) => {
+                // sortDate가 없는 구버전 데이터를 위한 폴백 처리
+                let dateA = a.sortDate ? new Date(a.sortDate) : new Date(new Date().getFullYear() + '/' + a.date);
+                let dateB = b.sortDate ? new Date(b.sortDate) : new Date(new Date().getFullYear() + '/' + b.date);
+                return dateA - dateB;
+            });
+
+            // 최대 14일치 초과 시 가장 오래된 데이터(index 0) 삭제
+            if (data.length > 14) {
+                data.shift(); 
             }
 
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -706,7 +761,7 @@
         }
 
         function clearData() {
-            if(confirm("저장된 1주일 기록을 모두 삭제하시겠습니까?")) {
+            if(confirm("저장된 2주치 기록을 모두 삭제하시겠습니까?")) {
                 localStorage.removeItem(STORAGE_KEY);
                 renderChart();
                 showToast("🗑️ 기록이 초기화되었습니다.");
