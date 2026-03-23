@@ -53,22 +53,25 @@
             margin: 0 0 15px 0;
             font-size: 2.2rem;
             font-weight: 800;
+            word-break: keep-all;
         }
 
         .age-selector-container {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
             background: rgba(255, 255, 255, 0.2);
             padding: 10px 20px;
             border-radius: 30px;
             backdrop-filter: blur(5px);
             margin-bottom: 10px;
+            gap: 10px;
         }
 
         .age-selector-container label {
             font-size: 1.1rem;
             font-weight: bold;
-            margin-right: 10px;
         }
 
         select#ageSelect {
@@ -117,11 +120,6 @@
             grid-column: 1 / -1;
         }
 
-        @media (max-width: 600px) {
-            .input-grid { grid-template-columns: 1fr; }
-            .input-group.full-width { grid-column: 1; }
-        }
-
         .input-group {
             display: flex;
             flex-direction: column;
@@ -136,6 +134,9 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: var(--text-sub);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .calc-text {
@@ -143,19 +144,21 @@
             background: #e6eaff;
             padding: 2px 8px;
             border-radius: 12px;
-            font-size: 0.9rem;
-            margin-left: 5px;
+            font-size: 0.85rem;
         }
 
+        /* 모바일 최적화: 시간 입력란 비율 조정 */
         .time-range {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
         .time-range input[type="time"] {
             flex: 1;
-            padding: 12px 10px;
+            max-width: 140px; /* S26 울트라 등 모바일에서 끝없이 늘어나는 것 방지 */
+            padding: 10px;
             font-size: 1.1rem;
             font-weight: bold;
             border: 1px solid #cbd5e0;
@@ -179,6 +182,7 @@
             background: white;
             cursor: pointer;
             font-family: inherit;
+            width: 100%;
         }
 
         /* 저장 버튼 스타일 */
@@ -206,111 +210,79 @@
 
         /* 섹션 공통 */
         section { margin-bottom: 30px; }
-        .section-title { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title { font-size: 1.3rem; font-weight: 700; color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 
         /* 상태 분석 카드 */
         .card { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
         .status-item { text-align: center; padding: 15px; border: 2px solid #e2e8f0; border-radius: 10px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: center; }
         .status-item.bad { border-color: var(--bad-color); background-color: var(--bad-bg); }
         .status-item.good { border-color: var(--good-color); background-color: var(--good-bg); }
-        .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
-        .label { font-weight: 700; display: block; margin-bottom: 5px; }
-        .value { color: var(--text-sub); font-size: 0.95rem; }
-        .highlight-text { font-weight: bold; display: block; margin-top: 5px; }
+        .icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+        .label { font-weight: 700; display: block; margin-bottom: 5px; font-size: 0.95rem; }
+        .value { color: var(--text-sub); font-size: 0.9rem; word-break: keep-all; }
+        .highlight-text { font-weight: bold; display: block; margin-top: 5px; font-size: 0.9rem; word-break: keep-all;}
         .bad .highlight-text { color: #e53e3e; }
         .good .highlight-text { color: #2f855a; }
 
         /* 핵심 원인: 과각성 메커니즘 */
-        .cause-diagram { position: relative; padding: 20px 0; text-align: center; }
-        .timeline { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; position: relative; }
-        .timeline::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 4px; background: #e2e8f0; transform: translateY(-50%); z-index: 1; }
-        .time-point { position: relative; z-index: 2; background: var(--card-bg); padding: 5px 10px; border-radius: 20px; border: 2px solid var(--primary-color); font-size: 0.85rem; font-weight: bold; }
+        .cause-diagram { position: relative; padding: 20px 10px; text-align: center; }
+        .timeline { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; position: relative; }
+        .timeline::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: #e2e8f0; transform: translateY(-50%); z-index: 1; }
+        .time-point { position: relative; z-index: 2; background: var(--card-bg); padding: 5px 8px; border-radius: 15px; border: 2px solid var(--primary-color); font-size: 0.75rem; font-weight: bold; word-break: keep-all; max-width: 30%; line-height: 1.2; }
         .time-point.target { border-color: var(--secondary-color); color: var(--secondary-color); }
-        .cause-arrow { color: #f56565; font-size: 1.5rem; margin: 10px 0; display: block; }
-        .highlight-box { background-color: #fff5f5; border-left: 4px solid #f56565; padding: 15px; margin-top: 20px; border-radius: 4px; }
-        .dynamic-info { display: inline-block; background: #e2e8f0; padding: 2px 8px; border-radius: 4px; color: #2b6cb0; font-weight: bold; margin: 5px 0; }
+        .cause-arrow { color: #f56565; font-size: 1.3rem; margin: 10px 0; display: block; }
+        .highlight-box { background-color: #fff5f5; border-left: 4px solid #f56565; padding: 15px; margin-top: 20px; border-radius: 4px; font-size: 0.95rem; text-align: left; }
+        .dynamic-info { display: inline-block; background: #e2e8f0; padding: 4px 10px; border-radius: 6px; color: #2b6cb0; font-weight: bold; margin: 10px 0; font-size: 0.9rem; }
 
         /* 차트 컨테이너 */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .clear-btn {
-            background-color: #e2e8f0;
-            color: #4a5568;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
+        .chart-container { position: relative; height: 250px; width: 100%; margin-top: 10px; }
+        .chart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+        .clear-btn { background-color: #e2e8f0; color: #4a5568; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; flex-shrink: 0; }
         .clear-btn:hover { background-color: #cbd5e0; }
 
         /* 체크리스트 & 솔루션 */
         .solution-list { list-style: none; padding: 0; margin: 0; }
-        .solution-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        .solution-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
         .solution-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .sol-icon { font-size: 1.5rem; color: var(--secondary-color); background: #e6fffa; padding: 10px; border-radius: 50%; flex-shrink: 0; }
-        .sol-content h4 { margin: 0 0 5px 0; color: var(--text-main); }
-        .sol-content p { margin: 0; color: var(--text-sub); font-size: 0.9rem; }
-        .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid transparent; transition: all 0.2s; }
+        .sol-icon { font-size: 1.3rem; color: var(--secondary-color); background: #e6fffa; padding: 8px; border-radius: 50%; flex-shrink: 0; }
+        .sol-content h4 { margin: 0 0 5px 0; color: var(--text-main); font-size: 1rem; }
+        .sol-content p { margin: 0; color: var(--text-sub); font-size: 0.9rem; word-break: keep-all; }
+        
+        .checklist-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid transparent; transition: all 0.2s; }
         .checklist-item:hover { border-left-color: var(--primary-color); background: #edf2f7; }
-        .checklist-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; margin-top: 2px; accent-color: var(--primary-color); }
-        .checklist-item label { cursor: pointer; flex: 1; }
+        .checklist-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; margin-top: 0; accent-color: var(--primary-color); flex-shrink: 0; }
+        .checklist-item label { cursor: pointer; flex: 1; font-size: 0.95rem; word-break: keep-all; line-height: 1.4; }
 
-        /* 커스텀 토스트 알림 */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 30px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 1rem;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s;
-        }
+        /* 토스트 알림 */
+        #toast { visibility: hidden; min-width: 200px; background-color: #333; color: #fff; text-align: center; border-radius: 30px; padding: 12px 20px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 0.9rem; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s, bottom 0.3s; width: max-content; max-width: 90%; }
+        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        /* 참고: 숨은 방해 요소 */
-        .reference-card { background-color: #f1f5f9; border-radius: 12px; padding: 20px; border-left: 5px solid #a0aec0; margin-top: 10px; }
-        .reference-card h4 { margin: 0 0 10px 0; color: #4a5568; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        .reference-card p { font-size: 0.95rem; color: #4a5568; margin-bottom: 15px; }
-        .ref-list { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .ref-item { background: white; padding: 12px 15px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; gap: 10px; align-items: flex-start; }
+        /* 의학적 참고 섹션 */
+        .reference-card { background-color: #f1f5f9; border-radius: 12px; padding: 15px; border-left: 5px solid #a0aec0; margin-top: 10px; }
+        .reference-card h4 { margin: 0 0 10px 0; color: #4a5568; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+        .reference-card p { font-size: 0.9rem; color: #4a5568; margin-bottom: 12px; word-break: keep-all; }
+        .ref-list { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .ref-item { background: white; padding: 10px 12px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; gap: 10px; align-items: flex-start; }
         .ref-item-icon { font-size: 1.2rem; flex-shrink: 0; }
         .ref-item-text strong { display: block; color: #2d3748; margin-bottom: 3px; font-size: 0.95rem; }
-        .ref-item-text span { font-size: 0.85rem; color: #718096; line-height: 1.4; }
-        .medical-disclaimer { margin-top: 15px; font-size: 0.85rem; color: #e53e3e; background: #fff5f5; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; }
-        footer { text-align: center; font-size: 0.85rem; color: var(--text-sub); padding: 20px 0; margin-top: 10px; }
+        .ref-item-text span { font-size: 0.85rem; color: #718096; line-height: 1.4; word-break: keep-all; }
+        .medical-disclaimer { margin-top: 15px; font-size: 0.8rem; color: #e53e3e; background: #fff5f5; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; word-break: keep-all;}
+        footer { text-align: center; font-size: 0.8rem; color: var(--text-sub); padding: 20px 0; margin-top: 10px; word-break: keep-all; }
 
+        /* S26 Ultra 등 모바일 최적화 미디어 쿼리 */
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            header { padding: 25px 15px 15px; }
+            header h1 { font-size: 1.8rem; }
+            .input-grid { grid-template-columns: 1fr; gap: 12px; }
+            .input-group.full-width { grid-column: 1; }
+            .status-grid { grid-template-columns: 1fr; gap: 12px; }
+            .card { padding: 15px; }
+            .time-range input[type="time"] { padding: 8px; font-size: 1rem; }
+            .input-group { padding: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -319,7 +291,7 @@
     <header>
         <h1>🌙 <span id="displayAge">22</span>개월 심재원 꿀잠 가이드</h1>
         <div class="age-selector-container">
-            <label for="ageSelect">아이 월령 선택:</label>
+            <label for="ageSelect">아이 월령:</label>
             <select id="ageSelect"></select>
         </div>
     </header>
@@ -347,22 +319,21 @@
             <div class="input-group full-width">
                 <label>오늘의 대근육 활동량</label>
                 <select id="inputActivity" class="activity-select">
-                    <option value="high">🏃 충분함 (야외놀이, 산책 등 1시간 이상)</option>
-                    <option value="low">📺 부족함 (실내 위주, 미디어 시청 등)</option>
+                    <option value="high">🏃 충분함 (야외놀이, 산책 1시간 이상)</option>
+                    <option value="low">📺 부족함 (실내 위주, 미디어 시청)</option>
                 </select>
             </div>
         </div>
-        <!-- 데이터 저장 버튼 -->
         <button id="saveBtn" class="save-btn">💾 오늘 수면 기록 저장하기</button>
     </div>
 
-    <!-- 2. 신규: 수면 트래킹 차트 -->
+    <!-- 2. 수면 트래킹 차트 -->
     <section>
         <div class="section-title">📈 1주일 수면 트래킹 일지</div>
         <div class="card">
             <div class="chart-header">
-                <p style="margin:0; font-size:0.95rem; color:var(--text-sub);">
-                    기기(브라우저)에 안전하게 누적됩니다. 꾸준히 기록해 보세요.
+                <p style="margin:0; font-size:0.85rem; color:var(--text-sub); word-break:keep-all;">
+                    브라우저에 안전하게 누적됩니다.
                 </p>
                 <button id="clearBtn" class="clear-btn">초기화</button>
             </div>
@@ -374,7 +345,7 @@
 
     <!-- 3. 상태 비교 -->
     <section>
-        <div class="section-title">📊 입력된 상태 분석 및 가이드라인 비교</div>
+        <div class="section-title">📊 입력 상태 분석 및 가이드라인 비교</div>
         <div class="card status-grid">
             <div class="status-item bad" id="cardTotalSleep">
                 <span class="icon" id="iconTotalSleep">⌛</span>
@@ -390,14 +361,14 @@
             </div>
             <div class="status-item bad" id="cardWakeWindow">
                 <span class="icon" id="iconWakeWindow">⚡</span>
-                <span class="label">수면 압박 (각성 시간 + 활동량)</span>
+                <span class="label">수면 압박 (각성 시간+활동량)</span>
                 <span class="value">현재: <span id="valWakeWindow">0시간 0분</span> 깨어있음</span>
                 <span class="highlight-text" id="feedbackWakeWindow"></span>
             </div>
             <div class="status-item good">
                 <span class="icon">🧸</span>
-                <span class="label">수면 연관 및 컨디션 (Good)</span>
-                <span class="value" style="margin-top:5px;">자가 수면 능력 양호<br>피부 불편감(선상태선) 감소 추세</span>
+                <span class="label">수면 연관 및 컨디션</span>
+                <span class="value" style="margin-top:5px;">자가 수면 능력 양호<br>피부 불편감 감소 추세</span>
             </div>
         </div>
     </section>
@@ -407,16 +378,15 @@
         <div class="section-title">💡 왜 깊게 못 잘까요?</div>
         <div class="card cause-diagram">
             <strong>"최적의 수면 창(Window)을 놓친 과각성 상태"</strong><br>
-            <span class="dynamic-info" id="dynamicWakeWindow">해당 월령 권장 각성 시간: 5~6시간</span>
+            <span class="dynamic-info" id="dynamicWakeWindow">권장 각성 시간: 5~6시간</span>
             <div class="timeline">
                 <span class="time-point" id="diagramNapEnd">낮잠 기상</span>
-                <span class="time-point target">수면 압박 최고조</span>
-                <span class="time-point" id="diagramBedtime">오후 10:00 취침</span>
+                <span class="time-point target">수면 압박<br>최고조</span>
+                <span class="time-point" id="diagramBedtime">오후 10:00<br>취침</span>
             </div>
             <div class="highlight-box">
                 <span class="cause-arrow">⚠️ 지연된 수면 타이밍 ⚠️</span>
-                적정 각성 시간을 넘기면 <strong>뇌는 "더 깨어있어야 해!"라고 착각</strong>하여<br>
-                스트레스 호르몬(코르티솔) 분비 → 얕은 잠, 자주 깨는 원인이 됩니다.
+                적정 각성 시간을 넘기면 <strong>뇌는 "더 깨어있어야 해!"라고 착각</strong>하여 스트레스 호르몬(코르티솔) 분비 → 얕은 잠, 자주 깨는 원인이 됩니다.
             </div>
         </div>
     </section>
@@ -510,7 +480,6 @@
         const STORAGE_KEY = 'jaewon_sleep_diary';
 
         // --- 3. 기본 설정 함수 ---
-        // 12~36개월 옵션 생성
         for (let i = 12; i <= 36; i++) {
             const option = document.createElement('option');
             option.value = i;
@@ -519,7 +488,6 @@
             ageSelect.appendChild(option);
         }
 
-        // 시간 계산 유틸리티
         function calculateHours(startStr, endStr) {
             if (!startStr || !endStr) return 0;
             const [startH, startM] = startStr.split(':').map(Number);
@@ -565,7 +533,7 @@
                 minSleep = 10; maxSleep = 13; minWake = 5.5; maxWake = 7; wakeWindowStr = '5.5~7'; napInfo = '하루 1회(또는 생략), 1시간 이내로';
             }
 
-            dynamicWakeWindow.textContent = `해당 월령 권장 각성 시간: ${wakeWindowStr}시간`;
+            dynamicWakeWindow.textContent = `권장 각성 시간: ${wakeWindowStr}시간`;
             recNap.textContent = napInfo;
 
             const napHours = calculateHours(napStart.value, napEnd.value);
@@ -579,89 +547,77 @@
             valTotalSleep.textContent = formatHM(currentTotalHours);
             valWakeWindow.textContent = formatHM(currentWakeHours);
 
-            // 총 수면량 평가
             if (currentTotalHours < minSleep) {
                 cardTotalSleep.className = 'status-item bad'; iconTotalSleep.textContent = '⌛';
-                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 대비 부족)`;
+                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 부족)`;
             } else if (currentTotalHours > maxSleep) {
                 cardTotalSleep.className = 'status-item bad'; iconTotalSleep.textContent = '⚠️';
-                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 대비 과다)`;
+                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 과다)`;
             } else {
                 cardTotalSleep.className = 'status-item good'; iconTotalSleep.textContent = '✨';
-                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 충족, 적절함)`;
+                feedbackTotalSleep.textContent = `(권장 ${minSleep}~${maxSleep}h 충족)`;
             }
 
-            // 각성 시간 및 활동량 교차 평가
             const activityLevel = inputActivity.value;
             if (currentWakeHours < minWake) {
                 cardWakeWindow.className = 'status-item bad'; iconWakeWindow.textContent = '🥱';
-                feedbackWakeWindow.textContent = activityLevel === 'high' ? `(권장 ${minWake}~${maxWake}h 대비 부족: 아직 졸리지 않음)` : `(권장 시간 및 활동량 모두 부족: 입면 매우 어려움)`;
+                feedbackWakeWindow.textContent = activityLevel === 'high' ? `(권장 ${minWake}~${maxWake}h 부족)` : `(시간/활동량 부족: 입면 어려움)`;
             } else if (currentWakeHours > maxWake) {
                 cardWakeWindow.className = 'status-item bad'; iconWakeWindow.textContent = '⚡';
-                feedbackWakeWindow.textContent = activityLevel === 'high' ? `(권장 ${minWake}~${maxWake}h 초과: 피로 누적 및 과각성 경고)` : `(시간 초과: 신체 피로도는 낮고 뇌만 과각성된 상태)`;
+                feedbackWakeWindow.textContent = activityLevel === 'high' ? `(권장 ${minWake}~${maxWake}h 초과: 과각성 경고)` : `(시간 초과: 뇌만 과각성된 상태)`;
             } else {
                 if (activityLevel === 'high') {
                     cardWakeWindow.className = 'status-item good'; iconWakeWindow.textContent = '✨';
-                    feedbackWakeWindow.textContent = `(권장 ${minWake}~${maxWake}h 충족: 최적의 수면 압박 형성됨)`;
+                    feedbackWakeWindow.textContent = `(권장 ${minWake}~${maxWake}h 충족: 수면 압박 최적)`;
                 } else {
                     cardWakeWindow.className = 'status-item bad'; iconWakeWindow.textContent = '⚠️';
-                    feedbackWakeWindow.textContent = `(권장 시간은 충족했으나 활동량 부족으로 실질적 수면 압박 약함)`;
+                    feedbackWakeWindow.textContent = `(시간 충족, 활동량 부족으로 수면 압박 약함)`;
                 }
             }
 
-            // 취침 타이밍 평가
             const bedTimeVal = nightStart.value;
             let displayTime = format12Hour(bedTimeVal);
             valBedtime.textContent = displayTime;
-            diagramBedtime.textContent = displayTime + " 취침";
-            diagramNapEnd.textContent = format12Hour(napEnd.value) + " 기상";
+            diagramBedtime.innerHTML = displayTime.replace(' ', '<br>') + "<br>취침";
+            diagramNapEnd.innerHTML = "낮잠 기상<br>" + format12Hour(napEnd.value);
 
             if (bedTimeVal && (parseInt(bedTimeVal.split(':')[0]) >= 21 || parseInt(bedTimeVal.split(':')[0]) < 6)) {
                 cardBedtime.className = 'status-item bad'; iconBedtime.textContent = '🕒';
                 feedbackBedtime.textContent = '(골든타임 지연, 과각성 유발)';
             } else {
                 cardBedtime.className = 'status-item good'; iconBedtime.textContent = '🌙';
-                feedbackBedtime.textContent = '(수면 창에 맞춘 최적의 타이밍)';
+                feedbackBedtime.textContent = '(수면 창에 맞춘 최적 타이밍)';
             }
         }
 
         // --- 5. 로컬 스토리지 & 차트 로직 ---
-
-        // 토스트 메시지 출력
         function showToast(msg) {
             toast.textContent = msg;
             toast.className = "show";
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
-        // 데이터 로드
         function loadSleepData() {
             const raw = localStorage.getItem(STORAGE_KEY);
             return raw ? JSON.parse(raw) : [];
         }
 
-        // 데이터 저장
         function saveRecord() {
             const data = loadSleepData();
-            
-            // 오늘 날짜 구하기 (MM/DD 형식)
             const today = new Date();
             const dateStr = `${today.getMonth() + 1}/${today.getDate()}`;
             
-            // 새 기록 객체
             const newRecord = {
                 date: dateStr,
                 total: parseFloat(currentTotalHours.toFixed(1)),
                 wake: parseFloat(currentWakeHours.toFixed(1))
             };
 
-            // 중복 날짜 처리 (업데이트)
             const existingIdx = data.findIndex(d => d.date === dateStr);
             if (existingIdx >= 0) {
                 data[existingIdx] = newRecord;
                 showToast("✅ 오늘 기록이 업데이트 되었습니다.");
             } else {
-                // 최근 7일치만 유지 (오래된 데이터 삭제)
                 if (data.length >= 7) data.shift();
                 data.push(newRecord);
                 showToast("💾 오늘 수면 기록이 저장되었습니다.");
@@ -671,7 +627,6 @@
             renderChart();
         }
 
-        // 차트 렌더링
         function renderChart() {
             const data = loadSleepData();
             const ctx = document.getElementById('sleepChart').getContext('2d');
@@ -680,12 +635,10 @@
             const totals = data.map(d => d.total);
             const wakes = data.map(d => d.wake);
 
-            // 기존 인스턴스 파괴
             if (sleepChartInstance) {
                 sleepChartInstance.destroy();
             }
 
-            // 데이터가 없으면 빈 차트 안내용 임시 데이터 삽입
             if(data.length === 0) {
                 labels.push("입력 대기중");
                 totals.push(0);
@@ -726,7 +679,7 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'bottom' },
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 11} } },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -736,29 +689,22 @@
                         }
                     },
                     scales: {
+                        x: { ticks: { font: {size: 10} } },
                         y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: '총 수면(h)' },
-                            min: 0,
-                            max: 16
+                            type: 'linear', display: true, position: 'left',
+                            title: { display: true, text: '총 수면(h)', font: {size: 10} },
+                            min: 0, max: 16, ticks: { font: {size: 10} }
                         },
                         y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: { display: true, text: '각성 시간(h)' },
-                            min: 0,
-                            max: 10,
-                            grid: { drawOnChartArea: false }
+                            type: 'linear', display: true, position: 'right',
+                            title: { display: true, text: '각성 시간(h)', font: {size: 10} },
+                            min: 0, max: 10, grid: { drawOnChartArea: false }, ticks: { font: {size: 10} }
                         }
                     }
                 }
             });
         }
 
-        // 초기화 함수
         function clearData() {
             if(confirm("저장된 1주일 기록을 모두 삭제하시겠습니까?")) {
                 localStorage.removeItem(STORAGE_KEY);
@@ -767,7 +713,6 @@
             }
         }
 
-        // --- 6. 이벤트 리스너 등록 ---
         const inputs = [ageSelect, napStart, napEnd, nightStart, nightEnd, inputActivity];
         inputs.forEach(input => {
             input.addEventListener('change', updateApp);
@@ -777,7 +722,6 @@
         saveBtn.addEventListener('click', saveRecord);
         clearBtn.addEventListener('click', clearData);
 
-        // 초기 실행
         updateApp();
         renderChart();
     });
